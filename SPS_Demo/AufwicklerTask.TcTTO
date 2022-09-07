@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Task Name="AufwicklerTask" Id="{3eaefe27-f917-4287-9d64-4fa538c4db29}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>100</CycleTime>
+    <Priority>14</Priority>
+    <PouCall>
+      <Name>AufwicklerAnAus</Name>
+    </PouCall>
+    <TaskFBGuid>{b18df70b-a950-4492-b15f-a4522c88f4fa}</TaskFBGuid>
+    <Fb_init>{dc5ca150-8b44-4c82-9484-320b8ec003ff}</Fb_init>
+    <Fb_exit>{b1b5417a-e490-4b62-a0d5-a6a5c76384db}</Fb_exit>
+    <CycleUpdate>{b429b7ca-883d-473f-baf8-9d3a918fce92}</CycleUpdate>
+    <PostCycleUpdate>{03e53b42-e4b6-4e56-b469-e15ad9e8127c}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

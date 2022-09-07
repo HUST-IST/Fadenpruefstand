@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="E_DancerControlState" Id="{0052d813-5235-42f1-9897-d73df5923ac5}">
+    <Declaration><![CDATA[TYPE E_DancerControlState :
+(
+	STATE_DANCERCONTROL_INITIALIZATION := 100,
+	STATE_DANCERCONTROL_ORDER,
+	STATE_DANCERCONTROL_RUNNING,
+	STATE_DANCERCONTROL_WAITING,
+	STATE_DANCERCONTROL_STOP,
+	STATE_DANCERCONTROL_ERROR
+) UDINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

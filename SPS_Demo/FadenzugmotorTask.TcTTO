@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Task Name="FadenzugmotorTask" Id="{4a87b860-34b1-48e4-b6aa-68bc20cdb8d7}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>100</CycleTime>
+    <Priority>3</Priority>
+    <PouCall>
+      <Name>FadenzugmotorAnAus</Name>
+    </PouCall>
+    <TaskFBGuid>{9c6280b4-2bb4-4262-b31f-d7168a1984f1}</TaskFBGuid>
+    <Fb_init>{3122340b-a247-42fd-8293-f7910b1225b3}</Fb_init>
+    <Fb_exit>{21e7e340-c7fd-466f-aff9-439c636f2d2e}</Fb_exit>
+    <CycleUpdate>{d23f7f42-ce50-4687-9629-f4ab3d6f7e9c}</CycleUpdate>
+    <PostCycleUpdate>{1a32f8c4-2355-4350-abcb-57139a825543}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

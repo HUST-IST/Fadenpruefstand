@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Task Name="DatenbearbeitungTask" Id="{1f74c01e-c2f8-45c1-9967-7a4ade61d8b9}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>100</CycleTime>
+    <Priority>2</Priority>
+    <PouCall>
+      <Name>Datenbearbeiten</Name>
+    </PouCall>
+    <PouCall>
+      <Name>Speicher_leeren</Name>
+    </PouCall>
+    <TaskFBGuid>{4b1f9f3c-6f0d-49c7-9f34-b45a98b66e8f}</TaskFBGuid>
+    <Fb_init>{fcb8e487-e22c-48af-b97c-309ca4334299}</Fb_init>
+    <Fb_exit>{9ec22ea9-c554-42a2-86cd-e93b677824c5}</Fb_exit>
+    <CycleUpdate>{3a4f520b-bd8f-4510-908d-55c5dab96d9a}</CycleUpdate>
+    <PostCycleUpdate>{cad876bc-44c7-454b-bbfe-c22d78ed33d0}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

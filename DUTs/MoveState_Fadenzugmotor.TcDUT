@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="MoveState_Fadenzugmotor" Id="{dd6a5417-cbc6-4941-a32c-b2a701018e79}">
+    <Declaration><![CDATA[TYPE MoveState_Fadenzugmotor :
+(
+	FADENZUG_INIT,
+	FADENZUG_BEREIT,
+	FADENZUG_POWER_ON,
+	FADENZUG_JOG,
+	FADENZUG_MOVE,
+	FADENZUG_MOVE_NEW,
+	FADENZUG_HALT_ZU_INT,
+	FADENZUG_ERROR,
+	FADENZUG_RESET
+) UDINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

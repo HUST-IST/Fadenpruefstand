@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Task Name="MasterachseTask" Id="{bf882fa7-ebbc-4e59-898c-89eaae89fdf2}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>100</CycleTime>
+    <Priority>12</Priority>
+    <PouCall>
+      <Name>MasterAnAus</Name>
+    </PouCall>
+    <TaskFBGuid>{206bf8e8-4fbd-43cc-be68-420b9973939d}</TaskFBGuid>
+    <Fb_init>{7434dc84-09ff-40a6-94c7-ad1a001e2c15}</Fb_init>
+    <Fb_exit>{01613300-d9a2-42bf-b84c-a3db950f08a1}</Fb_exit>
+    <CycleUpdate>{9c71bb28-030a-4382-acf7-bff5d0314084}</CycleUpdate>
+    <PostCycleUpdate>{667cd1ad-50d9-494d-9195-99df369087f3}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

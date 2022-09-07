@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Task Name="AbwicklerTask" Id="{e6075a04-4012-4f4f-871d-05088cd3a90f}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>100</CycleTime>
+    <Priority>15</Priority>
+    <PouCall>
+      <Name>AbwicklerAnAus</Name>
+    </PouCall>
+    <TaskFBGuid>{ad42820a-3904-4e34-95dc-0ff38c8e91e9}</TaskFBGuid>
+    <Fb_init>{8b39546f-a312-44aa-9c12-4ca12855ae95}</Fb_init>
+    <Fb_exit>{bd2faeb4-59ff-4563-b0ff-6d62e33db5d5}</Fb_exit>
+    <CycleUpdate>{580b620d-069d-4943-b5e3-852f45d6bce1}</CycleUpdate>
+    <PostCycleUpdate>{6436e76c-7300-41d1-83ad-871a35069f41}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>
