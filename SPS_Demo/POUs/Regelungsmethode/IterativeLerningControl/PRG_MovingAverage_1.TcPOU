@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="PRG_MovingAverage_1" Id="{ba330070-fbb6-415a-be2c-ea81a0684cfc}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_MovingAverage_1
+VAR
+	fActualValue					: LREAL;
+	fManSyncValue					: LREAL;
+	bSync							: BOOL;
+	bHold							: BOOL;
+
+	fOut							: LREAL;
+	eMode							: E_CTRL_MODE;
+	stCTRL_MOVING_AVERAGE			: ST_CTRL_MOVING_AVERAGE_PARAMS;
+
+	eErrorId						: E_CTRL_ERRORCODES;
+	bError							: BOOL;
+
+	(* Filter *)
+	arrTable						: ARRAY[1..10] OF FLOAT;
+	fbCTRL_MOVING_AVERAGE			: FB_CTRL_MOVING_AVERAGE;
+
+	bInit							: BOOL		:= TRUE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bInit THEN
+	(* init parameter struct *)
+	stCTRL_MOVING_AVERAGE.tCtrlCycleTime		:= T#10MS;
+	stCTRL_MOVING_AVERAGE.tTaskCycleTime		:= T#10MS;
+	stCTRL_MOVING_AVERAGE.nSamplesToFilter		:= 10;
+
+	(* set the mode to ACTIVE --> normal operation *)
+	eMode := eCTRL_MODE_ACTIVE;
+
+	(* reset the init flag *)
+	bInit := FALSE;
+END_IF
+
+(* set the addresses *)
+stCTRL_MOVING_AVERAGE.pWorkArray_ADR		:= ADR(arrTable);
+stCTRL_MOVING_AVERAGE.nWorkArray_SIZEOF		:= SIZEOF(arrTable);
+
+(* call the filter *)
+fbCTRL_MOVING_AVERAGE	(	fIn				:= u_new,
+							fManSyncValue	:= fManSyncValue,
+							bSync			:= bSync,
+							eMode			:= eMode,
+							stParams		:= stCTRL_MOVING_AVERAGE,
+							bHold			:= bHold,
+							fOut			=> ILC_F_Out,
+							eErrorId		=> eErrorId,
+							bError			=> bError
+							);]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_MovingAverage_1">
+      <LineId Id="25" Count="15" />
+      <LineId Id="52" Count="11" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

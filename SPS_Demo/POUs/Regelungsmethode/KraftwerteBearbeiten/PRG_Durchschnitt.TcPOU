@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="PRG_Durchschnitt" Id="{c3f9d7c7-08a1-4e96-90f4-e3e6091a5041}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Durchschnitt
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GlobaleVariablen.iAnalogSamplesAverageValue_2 := (10.0 / 32767.0) * INT_TO_LREAL((GlobaleVariablen.aAnalogSamples_2[0] + 
+																				 GlobaleVariablen.aAnalogSamples_2[1] +
+																				 GlobaleVariablen.aAnalogSamples_2[2] +
+																				 GlobaleVariablen.aAnalogSamples_2[3] +
+																				 GlobaleVariablen.aAnalogSamples_2[4] +
+																				 GlobaleVariablen.aAnalogSamples_2[5] +
+																				 GlobaleVariablen.aAnalogSamples_2[6] +
+																				 GlobaleVariablen.aAnalogSamples_2[7] +
+																				 GlobaleVariablen.aAnalogSamples_2[8] +
+																				 GlobaleVariablen.aAnalogSamples_2[9]) / 10); // (0.000305185094759 = 10.0 / 32767.0)]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Durchschnitt">
+      <LineId Id="6" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

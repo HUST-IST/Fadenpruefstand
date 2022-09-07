@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="MAIN" Id="{a0b25d95-0eb3-4c1e-8ee6-249da19f8436}" SpecialFunc="None">
+    <Declaration><![CDATA[(* ===========================================================================================
+   Das Hauptprogramm regelt den Gesamtablauf und das Zusammenspiel der Unterprogramme, 
+   sodass 
+*)
+
+PROGRAM MAIN
+VAR
+	bErrAck_Button AT %I*:BOOL;
+	bErrAck_SAFETY AT %Q*:BOOL;
+	
+	Timer:LREAL;
+	flag:INT;
+	Test:BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Durchschleifen der Fehler-Quittierung
+bErrAck_SAFETY := bErrAck_Button;
+
+// automatisches NOT-AUS laut der Position des Fadenzugmotors
+IF Fadenzugmotor.NcToPlc.ActPos < MinPosition + 10 OR Fadenzugmotor.NcToPlc.ActPos > MaxPosition - 10 OR GlobaleVariablen.Fadenzugkraft_2 > 35 THEN
+	NOT_AUS := TRUE;
+END_IF
+
+//Eine Umdrehung der Masterachse ist ein Zyklus des Textilprozess
+IF MasterStart THEN
+	Drehzahl := (LREAL_TO_INT(GlobaleVariablen.Master.NcToPlc.ActPos)) MOD 360;
+	IF Drehzahl = 0 THEN
+		k := 0;
+	ELSE
+		k := k + 1;
+	END_IF
+END_IF	
+
+IF Test THEN
+	IF Timer >= 10000 THEN
+		Timer := 0;
+		IF flag = 0 THEN
+			flag := 1;
+		ELSE
+			flag := -flag;
+		END_IF
+	ELSE
+		Timer := Timer + 1;
+	END_IF
+ELSE
+	flag := 0;
+END_IF
+
+IF flag = 1 THEN
+	Sollkraft := 6;
+ELSIF flag = -1 THEN
+	Sollkraft := 14;
+ELSE
+	Sollkraft := 10;
+END_IF
+
+IF MasterLaeuft = FALSE AND AbwicklerLaeuft = FALSE AND AufwicklerLaeuft = FALSE THEN
+	NOT_AUS := FALSE;
+	MasterStopp := FALSE;
+	AbwicklerStopp := FALSE;
+	AufwicklerStopp := FALSE;
+	FadenzugmotorStopp := FALSE;
+	FadenmotorRegeln := FALSE;
+ELSIF NOT_AUS = TRUE THEN
+	MasterStopp := TRUE;
+	MasterStart := FALSE;
+	FadenmotorRegeln := FALSE;
+	AbwicklerStopp := TRUE;
+	AufwicklerStopp := TRUE;
+	FadenmotorFreigabe := FALSE;
+	ILC_EinAus := FALSE;
+	Test := FALSE;
+	LernenFertig := FALSE;
+END_IF
+
+
+// Status der Achsen am Beginn jedes Zyklus aktualisieren
+//GlobaleVariablen.Master();
+//GlobaleVariablen.Abwickler();
+//GlobaleVariablen.Aufwickler();
+//GlobaleVariablen.Fadenzugmotor();
+
+// EL7201-Analogsignal und Positionsabweichung des Ab- und Aufwicklers bearbeiten
+//Datenbearbeiten();
+
+// Programmablauf mittels Zustandsautomat
+//MasterAnAus();
+//AbwicklerAnAus();
+//AufwicklerAnAus();
+//FadenzugmotorAnAus();
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="23128" Count="46" />
+      <LineId Id="23215" Count="0" />
+      <LineId Id="23175" Count="10" />
+      <LineId Id="23230" Count="0" />
+      <LineId Id="23186" Count="14" />
+      <LineId Id="22296" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

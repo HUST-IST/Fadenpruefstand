@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="PRG_PID_Fadenzugmotor" Id="{7e78b365-1722-4ea4-bc2c-756d2e635d72}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_PID_Fadenzugmotor
+VAR
+	eMode							: E_CTRL_MODE;
+	stCTRL_P_PARAMS_Fadenzugmotor					: ST_CTRL_P_PARAMS;
+	stCTRL_I_PARAMS_Fadenzugmotor					: ST_CTRL_I_PARAMS;
+	stCTRL_D_PARAMS_Fadenzugmotor					: ST_CTRL_D_PARAMS;
+	eErrorId						: E_CTRL_ERRORCODES;
+	bInit							: BOOL	:= TRUE;
+	fManSyncValue					: LREAL;
+	bSync							: BOOL;
+	bError							: BOOL;
+	FB_P_Fadenzugmotor: FB_CTRL_P;
+	FB_I_Fadenzugmotor: FB_CTRL_I;
+	FB_D_Fadenzugmotor: FB_CTRL_D;
+	I_Saturation_Fadenzugmotor: BOOL;
+	PID_Regler_Output_Fadenzugmotor: LREAL;
+	Fehler_Fadenzugmotor: LREAL;
+	Kp: LREAL := 1;
+	ADRC_Kp: LREAL := 1;
+	Ki: LREAL := 0;
+	ADRC_Kd: LREAL := 0.001;
+	Kd: LREAL := 0;
+	Ti: TIME := T#30S;
+	Tv: TIME := T#10MS;
+	Td: TIME := T#400MS;
+	FB_Vorsteuerung_Fadenzugmotor: FB_CTRL_D;
+	stCTRL_Vorsteuerung_PARAMS_Fadenzugmotor: ST_CTRL_D_PARAMS;
+	Vorsteuerung_Regler_Out_Fadenzugmotor: LREAL;
+	Integral: LREAL;
+	I_Halt: BOOL;
+	alteKraftfehler: ARRAY[0..9] OF LREAL;
+	Differenzial: LREAL;
+	x1: LREAL;
+	x2: LREAL;
+	_d:LREAL:=0;
+	a0:LREAL:=0;
+	_y:LREAL:=0;
+	a1:LREAL:=0;
+	a2:LREAL:=0;
+	_a:LREAL:=0;
+    x1_delta:LREAL:=0;//ADRC状态跟踪误差项
+	fh:LREAL:=0;//最速微分加速度跟踪量
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF E_Switch THEN
+	IF TD_Switch THEN
+		_u_neu := (v1 - x1_hat) * ADRC_Kp + (v2 - x2_hat) * ADRC_Kd ;
+	ELSE 
+		_u_neu := (Sollkraft - x1_hat) * ADRC_Kp;
+	END_IF
+	
+	_u := (_u_neu - x3_hat) / b0;
+	_u := -_u;//Die Richtung der Fadenzugmotor anpassen
+ELSE
+	IF TD_Switch THEN
+		Kraftfehler := v1 - Fadenzugkraft_2;
+		Differenzial := v2;
+	ELSE
+		Kraftfehler := Sollkraft - Fadenzugkraft_2;
+		Differenzial := (Kraftfehler - alteKraftfehler[9])/ 0.001;
+	END_IF
+	
+	IF I_Halt = FALSE THEN
+		Integral := Integral + Kraftfehler * 0.0001;
+	END_IF
+	
+	PID_Regler_Output_Fadenzugmotor := Kraftfehler * Kp + Integral * Ki + Differenzial * Kd ;
+	
+	alteKraftfehler[9] := alteKraftfehler[8];
+	alteKraftfehler[8] := alteKraftfehler[7];
+	alteKraftfehler[7] := alteKraftfehler[6];
+	alteKraftfehler[6] := alteKraftfehler[5];
+	alteKraftfehler[5] := alteKraftfehler[4];
+	alteKraftfehler[4] := alteKraftfehler[3];
+	alteKraftfehler[3] := alteKraftfehler[2];
+	alteKraftfehler[2] := alteKraftfehler[1];
+	alteKraftfehler[1] := alteKraftfehler[0];
+	alteKraftfehler[0] := Kraftfehler;
+	
+	IF PID_Regler_Output_Fadenzugmotor >= 200 THEN 
+		PID_Output_After_Saturation_Fadenzugmotor := 200;
+	ELSIF PID_Regler_Output_Fadenzugmotor <= -200 THEN 
+		PID_Output_After_Saturation_Fadenzugmotor := -200;
+	ELSE 
+		PID_Output_After_Saturation_Fadenzugmotor := PID_Regler_Output_Fadenzugmotor;
+	END_IF
+	
+	(* Conditional Intrgration *)
+	IF Sign(Kraftfehler) = Sign(PID_Regler_Output_Fadenzugmotor) AND PID_Output_After_Saturation_Fadenzugmotor <> PID_Regler_Output_Fadenzugmotor THEN 
+		I_Halt := TRUE;
+	ELSE
+		I_Halt := FALSE;
+	END_IF
+	
+	(* Die Richtung der Fadenzugmotor anpassen *)
+	_u := -PID_Output_After_Saturation_Fadenzugmotor;
+END_IF
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_PID_Fadenzugmotor">
+      <LineId Id="3311" Count="0" />
+      <LineId Id="3752" Count="0" />
+      <LineId Id="3359" Count="0" />
+      <LineId Id="3753" Count="2" />
+      <LineId Id="3618" Count="0" />
+      <LineId Id="3620" Count="1" />
+      <LineId Id="3313" Count="0" />
+      <LineId Id="3317" Count="6" />
+      <LineId Id="3326" Count="31" />
+      <LineId Id="3316" Count="0" />
+      <LineId Id="3616" Count="1" />
+      <LineId Id="3314" Count="0" />
+      <LineId Id="2103" Count="0" />
+      <LineId Id="1604" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

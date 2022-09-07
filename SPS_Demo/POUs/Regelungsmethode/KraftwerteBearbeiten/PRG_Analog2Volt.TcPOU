@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="PRG_Analog2Volt" Id="{2f950c4d-62c3-403d-9bbb-2d0c2ed77dc0}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Analog2Volt
+VAR
+	i: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FOR i := 0 TO 9 BY 1 DO
+	//Eingangswerte sind 0-32767 (LREAL)
+	IF GlobaleVariablen.aAnalogSamples_2[i] < 0 THEN
+		GlobaleVariablen.aAnalogSamples_2[i] := 0;
+	ELSIF GlobaleVariablen.aAnalogSamples_2[i] > 32767 THEN
+		GlobaleVariablen.aAnalogSamples_2[i] := 32767;
+	END_IF
+	
+	//LREAL -> Volt(V) 0-32767 -> 0-10 V
+	GlobaleVariablen.aAnalogSamplesReal_2[i] := (10.0 / 32767.0) * GlobaleVariablen.aAnalogSamples_2[i]; // (0.000305185094759 = 10.0 / 32767.0)
+	
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Analog2Volt">
+      <LineId Id="6" Count="10" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

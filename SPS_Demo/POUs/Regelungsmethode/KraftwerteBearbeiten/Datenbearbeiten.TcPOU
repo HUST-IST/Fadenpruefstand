@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Datenbearbeiten" Id="{f29668ea-be45-4d08-a669-bf0e42c291a2}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Datenbearbeiten
+VAR
+	bFilterSwitch: BOOL := TRUE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// wenn der Fadenzugsensor eingeschaltet wird, ist der Anfangswert ca. 1500. 
+IF GlobaleVariablen.aAnalogSamples_2[0]>999 THEN //um einfach festzustellen, ob der Sensor funktioniert
+	
+	PRG_Analog2Volt();			   // LREAL -> Volt(V):  0-32767 -> 0-10 V
+	
+	IF bFilterSwitch THEN          // Filter nutzen. Nachteil: Zeitverzögerung von mindestens einem Task-Zykluszeit(Bei diesem Programm ist die Zeitverzögerung gegen 0.1 ms)
+		PRG_AntiPulsFilter();	   // die Höchst- und Mindestwerte aus der Proben entfernen und danach Durchschnitt ermitteln.
+		PRG_Amplitudenbegrenzung();//der neue Wert entfernen, wenn der neue Wert 2 mal größer als der alte Wert.
+		PRG_KalmannFilter();	   // Trendvorhersage und Rollendes Filtrieren
+		//PRG_MovingAverage();      // Der Filter kommt aus Beckhoff
+	ELSE						   // Filter nicht nutzen, aber unsere Analogklemme EL3702 gibt uns 10 Stichproben in jedem Task-Zyklus. 
+		PRG_Durchschnitt();		   // die Mittelwert der 10 Stichproben ermittteln
+	END_IF
+	
+	PRG_Volt2Kraft();			   // Volt(V) -> Kraft(N)
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="Datenbearbeiten">
+      <LineId Id="3073" Count="0" />
+      <LineId Id="2978" Count="0" />
+      <LineId Id="3060" Count="0" />
+      <LineId Id="2980" Count="0" />
+      <LineId Id="3059" Count="0" />
+      <LineId Id="2982" Count="0" />
+      <LineId Id="2984" Count="0" />
+      <LineId Id="2996" Count="0" />
+      <LineId Id="3007" Count="0" />
+      <LineId Id="3078" Count="0" />
+      <LineId Id="3009" Count="0" />
+      <LineId Id="3021" Count="2" />
+      <LineId Id="3028" Count="0" />
+      <LineId Id="132" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

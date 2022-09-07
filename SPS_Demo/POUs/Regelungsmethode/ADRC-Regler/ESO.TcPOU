@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="ESO" Id="{5a5fdb87-ae01-4456-8cdd-bf778073eea4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION ESO : LREAL
+VAR_INPUT
+	_y:LREAL;
+END_VAR
+VAR
+	fe:LREAL;
+    fe1:LREAL;
+	g1: LREAL;
+	g2: LREAL;
+	g3: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ee := x1_hat - _y;//状态误差
+
+fe := Fal(ee,0.5,ADRC_ESO_h);//非线性函数，提取跟踪状态与当前状态误差
+fe1 := Fal(ee,0.25,ADRC_ESO_h);
+//g1 := ee;
+//g2 := SQRT(ABS(ee)) * Sign(ee);
+//g3 := SQRT(SQRT(ABS(ee))) * Sign(ee);
+
+//*************扩展状态量更新**********/
+x1_hat := x1_hat + ADRC_ESO_h * (x2_hat - ADRC_ESO_beta01 * ee);
+//x1_hat := ADRC_ESO_h * x2_hat - 159 * x1_hat + 160*_y;
+x2_hat := x2_hat + ADRC_ESO_h * (x3_hat + b0 * _u - ADRC_ESO_beta02 * fe);
+x3_hat := x3_hat + ADRC_ESO_h * (- ADRC_ESO_beta03 * fe1);
+]]></ST>
+    </Implementation>
+    <LineIds Name="ESO">
+      <LineId Id="114" Count="12" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

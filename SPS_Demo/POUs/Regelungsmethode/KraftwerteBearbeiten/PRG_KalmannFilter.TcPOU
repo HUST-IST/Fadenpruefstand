@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="PRG_KalmannFilter" Id="{4bafbc3b-ddfe-48f1-91e6-8e2c3d08d770}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_KalmannFilter
+VAR
+	P: LREAL := 1.0;
+	P_: LREAL;
+	X: LREAL := 0.0;
+	X_: LREAL;
+	K: LREAL := 0;
+	Q: LREAL := 0.001;
+	// 1
+	RR: LREAL := 0.1;
+	OriginalOutput: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//*********************************
+//Kalmann Filter
+OriginalOutput := GlobaleVariablen.iAnalogSamplesAverageValue_2;
+X_ := X + 0;
+P_ := P + Q;
+K := P_ / (P_ + RR);
+X := X_ + K * (GlobaleVariablen.iAnalogSamplesAverageValue_2 - X_);
+P := P_ - K * P_;
+GlobaleVariablen.iAnalogSamplesAverageValue_2 := X;
+//*********************************
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_KalmannFilter">
+      <LineId Id="6" Count="8" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

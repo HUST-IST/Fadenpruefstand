@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Fal" Id="{0b2ee681-25be-4f41-b01f-4532847a1a77}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Fal : LREAL
+VAR_INPUT
+	e:LREAL;
+	alpha:LREAL;
+	delta:LREAL;
+END_VAR
+VAR
+	temp:LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//原点附近有连线性段的连续幂次函数
+IF ABS(e) <= delta THEN
+	Fal := e / EXPT(delta, alpha -1);
+ELSE
+	Fal := EXPT(ABS(e), alpha) * Sign(e);
+END_IF
+//temp := (Sign(e+delta) - Sign(e-delta)) / 2;
+//Fal := e * temp / (EXPT(delta, 1 - alpha)) + EXPT(ABS(e), alpha) * Sign(e) * (1 - temp);]]></ST>
+    </Implementation>
+    <LineIds Name="Fal">
+      <LineId Id="28" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="44" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

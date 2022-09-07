@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Speicher_leeren" Id="{b6bb0a27-ac79-466e-9144-05df1bef55f8}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Speicher_leeren
+VAR
+	m:INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF xPunkt_geaendert = TRUE OR (ILC_EinAus = FALSE AND MasterStart = TRUE) THEN
+	FOR m := 0 TO 2000 BY 1 DO
+		u_Old[m]:= 0;
+		e_Old[m]:= 0;
+		count := 0;
+	END_FOR
+	LernenFertig := FALSE;
+	ILC_Out := 0;
+	alt_xPunkt := xPunkt;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="Speicher_leeren">
+      <LineId Id="6" Count="5" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

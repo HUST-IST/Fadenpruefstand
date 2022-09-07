@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="PRG_Amplitudenbegrenzung" Id="{131ef9a9-b292-4179-9104-5ee7c3f20cec}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Amplitudenbegrenzung
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//*********************************
+//Amplitudenbegrenzende Filterungsmethode
+//der neue Wert entfernen, wenn der neue Wert 2 mal größer als der alte Wert.
+
+IF (KraftSensorNewValue - GlobaleVariablen.iAnalogSamplesAverageValue_2 > 2) OR (GlobaleVariablen.iAnalogSamplesAverageValue_2 - KraftSensorNewValue> 2) THEN
+	GlobaleVariablen.iAnalogSamplesAverageValue_2 := KraftSensorOldValue;
+ELSE
+	GlobaleVariablen.iAnalogSamplesAverageValue_2 := KraftSensorNewValue;
+END_IF
+KraftSensorOldValue := GlobaleVariablen.iAnalogSamplesAverageValue_2;
+//*********************************]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Amplitudenbegrenzung">
+      <LineId Id="6" Count="9" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

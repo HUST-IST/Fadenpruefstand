@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="DANCER_REF" Id="{cdd2acbe-dd5c-4a7c-97d8-baad41db742d}">
+    <Declaration><![CDATA[TYPE DANCER_REF :
+STRUCT
+	/// 	Tension_ctl is the target value for web tension,
+	///		typically the target position for the dancer in balanced condition 
+	///	
+	Tension_ctl: DINT;
+	
+	
+	///	OUTPUT GearRatio
+	///		GearRatio is the ratio of gear factor g(t)
+	///		between master (web) and Slave (spool)
+	///		to balance the dancer. Default is 1.0.
+	///		GearRatio is an output value of the Dancercontrol function block.
+	///	
+	GearRatio: LREAL;
+	
+	
+	
+	/// 	deltaGear is the scaling multiplier of PID output (-1.0 ...  +1.0) to GearRatio - must be smaller than 1 but never 0.
+	///		deltaGear would be e.g. 0.8 or 0.9 to limit the gear distortion 
+	///		GearRatio = g(t) = deltaGear * PIDout + Gearoffset
+	///	
+	deltaGear: LREAL;
+	
+	
+	
+	/// 	GearOffset is the scaling offset to fit GearRatio distortion by satisfying equation
+	///		GearRatio = g(t) = deltaGear * PIDout + Gearoffset
+	///	
+	GearOffset: LREAL;
+	
+	
+	/// PID Control Proportional gain (P) 
+	fKp: LREAL;
+	
+	
+	/// PID Control Integral gain Tn (I) [s] 
+	fTn: LREAL;
+	
+	
+	/// PID Control Derivative gain Tv (D-T1) [s] 
+	fTv: LREAL;
+	
+	
+	/// PID Control Derivative damping time Td (D-T1) [s] 
+	fTd: LREAL;
+	
+	
+	/// 	acceleration limitation
+	///		Accel_limit corresponds indirectly, i.e. relative to a
+	///		maximum master velocity and to a maximum permitted 
+	///		acceleration (pa = aSlaveMax / v MasterMax ). 
+	///		The limit parameter pa corresponds to the 
+	///		reciprocal value of the run-up time tH = 1 / pa 
+	///	
+	Accel_limit: LREAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

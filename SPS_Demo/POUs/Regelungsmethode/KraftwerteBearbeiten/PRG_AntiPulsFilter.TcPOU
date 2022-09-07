@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="PRG_AntiPulsFilter" Id="{75964bc1-d96c-4a84-809c-669e02454451}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_AntiPulsFilter
+VAR
+	i: INT;
+	lmax_1: LREAL;
+	lmax_2: LREAL;
+	lmin_1: LREAL;
+	lmin_2: LREAL;
+	lsum_1: LREAL;
+	lsum_2: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Anti-Puls-Interferenz-Filterverfahren
+//die Höchst- und Mindestwerte aus der Proben entfernen und danach Durchschnitt ermitteln.
+lsum_2 := 0;
+lmax_2 := GlobaleVariablen.aAnalogSamplesReal_2[0];
+lmin_2 := GlobaleVariablen.aAnalogSamplesReal_2[0];
+
+FOR i := 0 TO 9 BY 1 DO
+	IF lmax_2 < GlobaleVariablen.aAnalogSamplesReal_2[i] THEN
+		lmax_2 := GlobaleVariablen.aAnalogSamplesReal_2[i];
+	END_IF
+	IF lmin_2 > GlobaleVariablen.aAnalogSamplesReal_2[i] THEN
+		lmin_2 := GlobaleVariablen.aAnalogSamplesReal_2[i];
+	END_IF
+	lsum_2 := lsum_2 + GlobaleVariablen.aAnalogSamplesReal_2[i];
+END_FOR
+
+//GlobaleVariablen.iAnalogSamplesAverageValue := (isum-imax-imin)/8;
+KraftSensorNewValue := (lsum_2 - lmax_2 - lmin_2) / 8;]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_AntiPulsFilter">
+      <LineId Id="10" Count="16" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

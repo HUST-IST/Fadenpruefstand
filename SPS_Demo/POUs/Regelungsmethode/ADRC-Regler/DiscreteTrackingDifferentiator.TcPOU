@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="DiscreteTrackingDifferentiator" Id="{9c11e9ba-57a3-4e46-9555-f28b849f2a2c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION DiscreteTrackingDifferentiator : LREAL
+VAR_INPUT
+	expect_ADRC:LREAL;
+END_VAR
+
+VAR
+	_d:LREAL;
+	a0:LREAL;
+	_y:LREAL;
+	a1:LREAL;
+	a2:LREAL;
+	_a:LREAL;
+    v1_delta: LREAL;//ADRC状态跟踪误差项
+	Sy: LREAL;
+	Sa: LREAL;
+	fhan: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[v1_delta := v1 - expect_ADRC;//用x1-v(k)替代x1得到离散更新公式
+
+_d := ADRC_TD_r0 * ADRC_TD_h0 * ADRC_TD_h0;//d=r0 * h0^2;
+a0 := ADRC_TD_h0 * v2;//a0=h0*v2
+_y := v1_delta + a0;//y=x1+a0
+a1 := SQRT(_d * (_d + 8.0 * ABS(_y)));//a1=sqrt(d*(d+8*ABS(y))])
+a2 := a0 + Sign(_y) * (a1 - _d) / 2.0;//a2=a0+sign(y)*(a1-d)/2;
+Sy := (Sign(_y + _d) - Sign(_y - _d)) / 2.0;
+_a := (a0 + _y - a2) * Sy + a2;
+Sa := (Sign(_a + _d) - Sign(_a - _d)) / 2.0;
+fhan := -ADRC_TD_r0 * ((_a / _d) - Sign(_a)) * Sa - ADRC_TD_r0 * Sign(_a);//得到最速微分加速度跟踪量
+
+v1 := v1 + ADRC_TD_h0 * v2;//跟新最速跟踪状态量x1
+IF ABS(fhan) <= ADRC_TD_r0 THEN
+	v2 := v2 + ADRC_TD_h0 * fhan;//跟新最速跟踪状态量微分x2
+END_IF
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="DiscreteTrackingDifferentiator">
+      <LineId Id="159" Count="0" />
+      <LineId Id="64" Count="5" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="71" Count="6" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
